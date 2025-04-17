@@ -30,11 +30,15 @@ router.get('/:id', async (req, res) => {
 
 // Create new campaign
 router.post('/', async (req, res) => {
+  console.log('\n=== Campaign Creation Request ===');
+  console.log('Request Body:', JSON.stringify(req.body, null, 2));
+  
   try {
     const { name, description, status = 'active', leads, accountIDs } = req.body;
 
     // Basic validation
     if (!name || !description) {
+      console.log('Validation failed - missing required fields');
       return res.status(400).json({ 
         message: 'Missing required fields',
         missingFields: [
@@ -46,6 +50,7 @@ router.post('/', async (req, res) => {
 
     // Validate arrays
     if (!Array.isArray(leads) || leads.length === 0) {
+      console.log('Validation failed - invalid leads array');
       return res.status(400).json({ 
         message: 'Leads must be a non-empty array',
         received: leads
@@ -53,6 +58,7 @@ router.post('/', async (req, res) => {
     }
 
     if (!Array.isArray(accountIDs) || accountIDs.length === 0) {
+      console.log('Validation failed - invalid accountIDs array');
       return res.status(400).json({ 
         message: 'AccountIDs must be a non-empty array',
         received: accountIDs
@@ -62,6 +68,7 @@ router.post('/', async (req, res) => {
     // Validate status
     const validStatuses = ['ACTIVE', 'INACTIVE'];
     if (!validStatuses.includes(status)) {
+      console.log('Validation failed - invalid status:', status);
       return res.status(400).json({ 
         message: 'Invalid status value',
         receivedStatus: status,
@@ -76,22 +83,53 @@ router.post('/', async (req, res) => {
       leads,
       accountIDs
     };
-
+    
+    console.log('\n=== Campaign Data ===');
+    console.log('Data to be saved:', JSON.stringify(campaignData, null, 2));
+    
+    console.log('\n=== Creating Campaign Instance ===');
     const campaign = new Campaign(campaignData);
-    const savedCampaign = await campaign.save();
-    res.status(201).json(savedCampaign);
+    console.log('Campaign instance created');
+    
+    console.log('\n=== Attempting to Save Campaign ===');
+    try {
+      const savedCampaign = await campaign.save();
+      console.log('✅ Campaign saved successfully');
+      console.log('Saved campaign:', JSON.stringify(savedCampaign, null, 2));
+      return res.status(201).json(savedCampaign);
+    } catch (saveError) {
+      console.error('\n❌ Save Operation Failed');
+      console.error('Save Error Type:', saveError.name);
+      console.error('Save Error Message:', saveError.message);
+      console.error('Save Error Stack:', saveError.stack);
+      
+      if (saveError.errors) {
+        console.error('Validation Errors:', JSON.stringify(saveError.errors, null, 2));
+      }
+      
+      throw saveError; // Re-throw to be caught by outer catch
+    }
   } catch (error) {
-    console.error('Error creating campaign:', error);
+    console.error('\n❌ Campaign Creation Failed');
+    console.error('Error Type:', error.name);
+    console.error('Error Message:', error.message);
+    console.error('Error Stack:', error.stack);
+    
     if (error.name === 'ValidationError') {
       return res.status(400).json({
         message: 'Validation error',
         errors: Object.keys(error.errors).map(key => ({
           field: key,
-          message: error.errors[key].message
+          message: error.errors[key].message,
+          value: error.errors[key].value
         }))
       });
     }
-    res.status(500).json({ message: 'Error creating campaign' });
+
+    res.status(500).json({ 
+      message: 'Error creating campaign',
+      error: error.message
+    });
   }
 });
 

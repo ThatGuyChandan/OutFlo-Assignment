@@ -110,6 +110,52 @@ The application will be available at:
   - MongoDB
   - Mongoose
 
+## 🚀 Deployment
+
+### Client Deployment
+
+1. Build the React application:
+   ```bash
+   cd client
+   npm run build
+   ```
+
+2. Deploy the `build` directory to your hosting service.
+
+### Server Deployment
+
+1. Set up your production environment variables:
+   ```
+   MONGODB_URI=your_production_mongodb_uri
+   PORT=3000
+   NODE_ENV=production
+   ```
+
+2. Start the production server:
+   ```bash
+   cd server
+   npm start
+   ```
+
+### Deployment Platforms
+
+The application can be deployed on various platforms:
+
+- **Render.com**
+  - Set up two services: one for the client and one for the server
+  - Configure environment variables
+  - Set the build command to `npm run build`
+  - Set the start command to `npm start`
+
+- **Heroku**
+  - Create two apps: one for the client and one for the server
+  - Configure environment variables
+  - Deploy using Git or Heroku CLI
+
+- **Vercel**
+  - Deploy the client using Vercel's platform
+  - Deploy the server separately
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
