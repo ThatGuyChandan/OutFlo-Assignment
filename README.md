@@ -147,33 +147,10 @@ The application can be deployed on various platforms:
   - Set the build command to `npm run build`
   - Set the start command to `npm start`
 
-- **Heroku**
-  - Create two apps: one for the client and one for the server
-  - Configure environment variables
-  - Deploy using Git or Heroku CLI
-
 - **Vercel**
   - Deploy the client using Vercel's platform
   - Deploy the server separately
 
-## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Support
-
-For support, email support@outflo.com or join our Slack channel.
-
----
-
-Made with ❤️ by the OutFlo Team
